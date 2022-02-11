@@ -3,30 +3,19 @@ const uniqid = require("uniqid");
 const fs = require("fs");
 const jimp = require("jimp");
 const path = require("path");
+const cloudinary = require("../helpers/image_upload");
 const { knowError, unknowError } = require("../helpers/errors");
 const { server, imageProject } = require("../config");
 
 const uploadImage = async (req, res, next) => {
   const { id, name, username } = req;
   try {
-    /* Validate if exist the folder */
-    fs.access(imageProject.path, (err) => {
-      if (err) {
-        fs.mkdirSync(imageProject.path);
-      }
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      public_id: `${id}_project`,
+      width: 500,
+      height: 500,
+      crop: "fill",
     });
-
-    const ref = `${imageProject.path}/${req.file.originalname}`;
-
-    /* Compress image */
-    jimp.read(ref, (err, image) => {
-      if (err) {
-        throw err;
-      }
-      image.quality(80).write(ref);
-    });
-
-    const urlImageUploaded = server.host + "/uploads/" + req.file.originalname;
 
     res.status(201).json({
       ok: true,
@@ -35,7 +24,7 @@ const uploadImage = async (req, res, next) => {
         id,
         name,
         username,
-        urlImageUploaded,
+        urlImageUploaded: result.secure_url,
       },
     });
   } catch (err) {

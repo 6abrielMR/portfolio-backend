@@ -30,9 +30,10 @@ module.exports = {
     port: process.env.DB_PORT,
     database: process.env.DB_NAME,
   },
-  imageProject: {
-    path: process.env.FOLDER_IMG,
-    fieldname: process.env.FIELDNAME,
+  cloudinaryConf: {
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
   },
   email: {
     transporter,

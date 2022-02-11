@@ -1,6 +1,8 @@
 const jwtValidator = require("../middlewares/jwt.middleware");
-const uploadImages = require("../middlewares/upload_image.middleware");
 const fieldValidators = require("../middlewares/field_validators.middleware");
+const multer = require("multer");
+const storage = multer.diskStorage({});
+const upload = multer({ storage: storage });
 const { Router } = require("express");
 const {
   uploadImage,
@@ -19,7 +21,11 @@ router.get("/", getAllProjects);
 router.get("/:idProject", getProjectFindById);
 
 /* Private routes */
-router.post("/upload", [uploadImages, jwtValidator], uploadImage);
+router.post(
+  "/upload",
+  [upload.single("img_project"), jwtValidator],
+  uploadImage
+);
 router.post(
   "/new",
   [
