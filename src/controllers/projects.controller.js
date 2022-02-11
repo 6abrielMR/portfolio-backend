@@ -1,17 +1,13 @@
 const pool = require("../db");
 const uniqid = require("uniqid");
-const fs = require("fs");
-const jimp = require("jimp");
-const path = require("path");
 const cloudinary = require("../helpers/image_upload");
 const { knowError, unknowError } = require("../helpers/errors");
-const { server, imageProject } = require("../config");
 
 const uploadImage = async (req, res, next) => {
   const { id, name, username } = req;
   try {
     const result = await cloudinary.uploader.upload(req.file.path, {
-      public_id: `${id}_project`,
+      public_id: `${id}_${Date.now()}_project`,
       width: 500,
       height: 500,
       crop: "fill",
